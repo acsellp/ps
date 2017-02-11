@@ -17,7 +17,6 @@ int			main(int ac, char **av)
 		read_from_file(av[1], sorted);
 	else
 		fill_stack_a(av, 1, ac, sorted);
-
 	//sort(stk, 1);
 	calc_med(sorted);
 	//ft_printf("MED %d\n\n",sorted->med);
