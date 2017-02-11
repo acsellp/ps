@@ -26,7 +26,7 @@ int			main(int ac, char **av)
 	//ft_printf("MED %d\n\n",sorted->med);
 	stk->med_val = sorted->med_val;
 	//print_stacks("startuem", stk, MAX_INT);
-	sort_(stk);
+	int srt = sort_(stk);
 	
 	
 	//ft_printf("selected %d\n",select_first_half(stk));
@@ -34,6 +34,10 @@ int			main(int ac, char **av)
 	//ft_printf("\nthe middle is %d\n\n",stk->med);
 	if (stk->flags.debug)
 		print_stacks("Done", stk, MAX_INT, 1);
+	if (srt == 1 && stk->flags.debug)
+		ft_printf("\nSTACK IS SORTED\n");
+	else if (stk->flags.debug)
+		ft_printf("\nNOT SORTED\n");
 	del_stacks(&stk);
 	del_stacks(&sorted);
 	return (0);

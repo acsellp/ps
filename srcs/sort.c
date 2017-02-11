@@ -21,7 +21,6 @@ int			select_first_part(t_stacks *stk)
 			break ;
 		count--;
 	}
-	printf("\nPBS is %d - %d\n\n",pbs,stk->med_val);
 	return (pbs);
 }
 
@@ -158,7 +157,8 @@ int			sort_(t_stacks *stk)
 	if (stk->flags.debug)
 		print_stacks("Init a and b", stk, MAX_INT, 0);
 	select_first_part(stk);
-	ft_printf("\t\tSELECTED FIRST PART [%d]",stk->med_val);
+	if (stk->flags.debug)
+		ft_printf("\t\tSELECTED FIRST PART [%d]",stk->med_val);
 	//return (0);
 	//
 	//	SELECT crest part
@@ -171,6 +171,12 @@ int			sort_(t_stacks *stk)
 		min = ret_min(stk->stack_a);
 		if (stk->size_a > 2 &&  first(stk->stack_a) != min)
 		{
+			if ((stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a)) &&\
+				(stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b)))
+				ss(stk);
+			if (stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b))
+				sb(stk, 1);
+			
 			pos = node_pos(min, stk->stack_a);
 			next_min = ret_next_min(stk->stack_a, min);
 			if (pos > stk->size_a / 2)
@@ -181,13 +187,19 @@ int			sort_(t_stacks *stk)
 					{
 						pb(stk, 1);
 						pbs++;
-						if ((stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a)) &&\
-							(stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b)))
-							ss(stk);
-						if (stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b))
-							sb(stk, 1);
+						
+						if (stk->flags.debug)
+							ft_printf("\nprev min %d | next one ",next_min);
 						next_min = ret_next_min(stk->stack_a, next_min);
+						if (stk->flags.debug)
+							ft_printf("%d \n\n",next_min);
 					}
+					if ((stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a)) &&\
+						(stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b)))
+						ss(stk);
+					if (stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b))
+						sb(stk, 1);
+					
 					rra(stk, 1);
 				}
 			}
@@ -199,25 +211,33 @@ int			sort_(t_stacks *stk)
 					{
 						pb(stk, 1);
 						pbs++;
-						if ((stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a)) &&\
-							(stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b)))
-							ss(stk);
-						if (stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b))
-							sb(stk, 1);
+
+						if (stk->flags.debug)
+							ft_printf("\nprev min %d | next one ",next_min);
 						next_min = ret_next_min(stk->stack_a, next_min);
+						if (stk->flags.debug)
+							ft_printf("%d \n\n",next_min);
 					}
+					if ((stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a)) &&\
+						(stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b)))
+						ss(stk);
+					if (stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b))
+						sb(stk, 1);
+						
 					ra(stk, 1);
 				}
 			}
-			
 		}
+		else if (stk->size_a <= 3 && first(stk->stack_a) > second(stk->stack_a))
+			sa(stk, 1);
 		if (!sorted(stk->stack_a) && stk->size_a > 2 && ++pbs)
 			pb(stk, 1);
 	}
-	ft_printf("\n   SECOND PART DONE\n");
+	if (stk->flags.debug)
+		ft_printf("\n   SECOND PART DONE\n");
 
-
-	ft_printf("\n   MOVING BACK %d nodes\n", pbs);
+	if (stk->flags.debug)
+		ft_printf("\n   MOVING BACK %d nodes\n", pbs);
 	while (pbs-- > 0)
 	{
 		//ft_printf("pbs-- %d\n",pbs);
@@ -235,8 +255,8 @@ int			sort_(t_stacks *stk)
 		if (stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b))
 			sb(stk, 1);
 	}
-	
-	ft_printf("\n   MOVED TO A\n");
+	if (stk->flags.debug)
+		ft_printf("\n   MOVED TO A\n");
 	
 	int max;
 	int	next_max;
@@ -247,11 +267,17 @@ int			sort_(t_stacks *stk)
 	//
 	while (1)
 	{
-		if (descending(stk->stack_b))
+		if (!stk->stack_b)
 			break ;
 		max = ret_max(stk->stack_b);
 		if (stk->size_b > 2 &&  first(stk->stack_b) != max)
 		{
+			if ((stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a)) &&\
+				(stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b)))
+				ss(stk);
+			if (stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a))
+				sa(stk, 1);
+			
 			pos = node_pos(max, stk->stack_b);
 			next_max = ret_next_max(stk->stack_b, max);
 			if (pos > stk->size_b / 2)
@@ -261,14 +287,25 @@ int			sort_(t_stacks *stk)
 					if (stk->stack_b->nr == next_max || stk->stack_b->nr == max)
 					{
 						pa(stk, 1);
-						if ((stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a)) &&\
-							(stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b)))
-							ss(stk);
-						if (stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a))
-							sa(stk, 1);
-						//next_max = ret_next_max(stk->stack_b, next_max);
+						if (stk->flags.debug)
+							ft_printf("\nprev max %d | next one ",next_max);
+						next_max = ret_next_max(stk->stack_b, next_max);
+						if (stk->flags.debug)
+							ft_printf("%d \n\n",next_max);
 					}
+					
+					if ((stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a)) &&\
+						(stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b)))
+						ss(stk);
+					if (stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a))
+						sa(stk, 1);
 					rrb(stk, 1);
+					
+					if ((stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a)) &&\
+						(stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b)))
+						ss(stk);
+					if (stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a))
+						sa(stk, 1);
 				}
 			}
 			else
@@ -278,17 +315,28 @@ int			sort_(t_stacks *stk)
 					if (stk->stack_b->nr == next_max || stk->stack_b->nr == max)
 					{
 						pa(stk, 1);
-						if ((stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a)) &&\
-							(stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b)))
-							ss(stk);
-						if (stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a))
-							sa(stk, 1);
-						//next_max = ret_next_max(stk->stack_b, next_max);
+
+						if (stk->flags.debug)
+							ft_printf("\nprev max %d | next one ",next_max);
+						next_max = ret_next_max(stk->stack_b, next_max);
+						if (stk->flags.debug)
+							ft_printf("%d \n\n",next_max);
 					}
+					if ((stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a)) &&\
+						(stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b)))
+						ss(stk);
+					if (stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a))
+						sa(stk, 1);
 					rb(stk, 1);
+					
+					if ((stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a)) &&\
+						(stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b)))
+						ss(stk);
+					if (stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a))
+						sa(stk, 1);
 				}
 			}
-			
+
 		}
 		if (stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a))
 			sa(stk, 1);
