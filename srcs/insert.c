@@ -54,7 +54,7 @@ void		cut_the_crap(int *i, int *cut)
 {
 	*i = 15;
 	*cut = 1;
-	ft_printf("""`-._,-'""` -._,-'""` -._,-`\n");
+	ft_printf("""`-._,-'""` -.|,-'""` -._,-`\n");
 	ft_printf("           *\n           *");
 	ft_printf("\n|`-._,-'""`-._,-'""`-._,-`|\n");
 }
@@ -65,6 +65,8 @@ void		print_stacks(char *oper, t_stacks *stk, int f, int cut)
 	int			max;
 	t_stack		*n;
 
+	cut = 1;
+	
 	i = (max = stk->size_a > stk->size_b ? stk->size_a : stk->size_b);
 	ft_printf("\n> %s:\n_______________________\n", oper);
 	while (i--)

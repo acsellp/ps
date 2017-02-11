@@ -17,12 +17,18 @@ int			main(int ac, char **av)
 		read_from_file(av[1], sorted);
 	else
 		fill_stack_a(av, 1, ac, sorted);
+	
+	
 	//sort(stk, 1);
+	
+	
 	calc_med(sorted);
 	//ft_printf("MED %d\n\n",sorted->med);
 	stk->med_val = sorted->med_val;
 	//print_stacks("startuem", stk, MAX_INT);
 	sort_(stk);
+	
+	
 	//ft_printf("selected %d\n",select_first_half(stk));
 	//print_stacks("FIN", sorted, MAX_INT);
 	//ft_printf("\nthe middle is %d\n\n",stk->med);

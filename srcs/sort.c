@@ -1,13 +1,14 @@
 #include "push_swap.h"
 
-int			select_first_part(t_stacks *stk, int pivot)
+int			select_first_part(t_stacks *stk)
 {
 	t_stack	*s;
 	int		count;
 	int		pbs;
+	int		pivot;
 	
 	pbs = 0;
-	pivot = stk->size_a / pivot;
+	pivot = stk->size_a / stk->pivot;
 	count = stk->size_a;
 	while (count != 0)
 	{
@@ -20,7 +21,8 @@ int			select_first_part(t_stacks *stk, int pivot)
 			break ;
 		count--;
 	}
-	return (stk->med_val);
+	printf("\nPBS is %d - %d\n\n",pbs,stk->med_val);
+	return (pbs);
 }
 
 void		calc_med(t_stacks *stk)
@@ -30,7 +32,7 @@ void		calc_med(t_stacks *stk)
 
 	sort(stk, 0);
 	a = stk->stack_a;
-	pos = stk->size_a / 2;
+	pos = stk->size_a / stk->pivot;
 	while (a && pos)
 	{
 		a = a->next;
@@ -146,18 +148,22 @@ int			ret_next_max(t_stack *stack, int curr)
 	return (next);
 }
 
-
 int			sort_(t_stacks *stk)
 {
 	int		min;
 	int		pos;
 	int		next_min;
+	int		pbs;
 	
 	if (stk->flags.debug)
 		print_stacks("Init a and b", stk, MAX_INT, 0);
-	select_first_part(stk, 2);
+	select_first_part(stk);
 	ft_printf("\t\tSELECTED FIRST PART [%d]",stk->med_val);
 	//return (0);
+	//
+	//	SELECT crest part
+	//
+	pbs = 0;
 	while (1)
 	{
 		if (sorted(stk->stack_a))
@@ -174,7 +180,7 @@ int			sort_(t_stacks *stk)
 					if (stk->stack_a->nr == next_min || stk->stack_a->nr == min)
 					{
 						pb(stk, 1);
-						
+						pbs++;
 						if ((stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a)) &&\
 							(stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b)))
 							ss(stk);
@@ -192,6 +198,7 @@ int			sort_(t_stacks *stk)
 					if (stk->stack_a->nr == next_min || stk->stack_a->nr == min)
 					{
 						pb(stk, 1);
+						pbs++;
 						if ((stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a)) &&\
 							(stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b)))
 							ss(stk);
@@ -204,15 +211,22 @@ int			sort_(t_stacks *stk)
 			}
 			
 		}
-		if (!sorted(stk->stack_a) && stk->size_a > 2)
+		if (!sorted(stk->stack_a) && stk->size_a > 2 && ++pbs)
 			pb(stk, 1);
 	}
-	while (1)
+	ft_printf("\n   SECOND PART DONE\n");
+
+
+	ft_printf("\n   MOVING BACK %d nodes\n", pbs);
+	while (pbs-- > 0)
 	{
 		//ft_printf("pbs-- %d\n",pbs);
+		
+		//
+		//	pa -> ss
+		//
 		pa(stk, 1);
-		if (!sorted(stk->stack_a))
-			break ;
+		//printf("\n-[%d]-\n",pbs);
 		if ((stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a)) &&\
 			(stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b)))
 			ss(stk);
@@ -222,11 +236,15 @@ int			sort_(t_stacks *stk)
 			sb(stk, 1);
 	}
 	
-	
+	ft_printf("\n   MOVED TO A\n");
 	
 	int max;
 	int	next_max;
 	
+	
+	//
+	//	ss !!!!!
+	//
 	while (1)
 	{
 		if (descending(stk->stack_b))
@@ -277,6 +295,7 @@ int			sort_(t_stacks *stk)
 		//if (!sorted(stk->stack_b) && stk->size_b > 2)
 			pa(stk, 1);
 	}
+	
 	
 	return (sorted(stk->stack_a));
 }
@@ -389,6 +408,7 @@ t_stacks	*init_stacks(void)
 	stk->size_a = 0;
 	stk->size_b = 0;
 	stk->med_val = 0;
+	stk->pivot = 2;
 	stk->flags.debug = 0;
 	stk->flags.color = 0;
 	stk->flags.open_file = 0;

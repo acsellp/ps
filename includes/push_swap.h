@@ -33,6 +33,7 @@ typedef struct		s_stacks
 	int				size_a;
 	int				size_b;
 	int				med_val;
+	int				pivot;
 	t_flags			flags;
 }					t_stacks;
 
@@ -76,7 +77,7 @@ void				exit_on_err(void);
 **	sort.c
 */
 
-int					select_first_part(t_stacks *stk, int pivot);
+int					select_first_part(t_stacks *stk);
 void				calc_med(t_stacks *stk);
 int					node_pos(int key, t_stack *stack);
 int					ret_min(t_stack *stack);
