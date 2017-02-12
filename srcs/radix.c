@@ -8,7 +8,7 @@ static void	swap(unsigned *a, unsigned *b)
     *a = *b;
     *b = temp;
 }
- 
+
 static void	rad_sort_u(unsigned *from, unsigned *to, unsigned bit)
 {
 	unsigned	*lft;
@@ -34,7 +34,7 @@ static void	rad_sort_u(unsigned *from, unsigned *to, unsigned bit)
 	rad_sort_u(from, lft, bit);
 	rad_sort_u(lft, to, bit);
 }
- 
+
 void		radix(int *stack, size_t size)
 {
 	size_t		i;
@@ -54,4 +54,29 @@ void		radix(int *stack, size_t size)
 		x[i] ^= MIN_INT;
 		i++;
 	}
+}
+
+void		find_middle(t_stacks *stk, char stack)
+{
+	t_stack *a;
+	size_t	size;
+	size_t	i;
+	
+	size = (stack == 'a') ? stk->sza : stk->szb;
+	if (stk->sorted)
+	{
+		free(stk->sorted);
+		stk->sorted = (int*)malloc(sizeof(int) * size);
+	}
+	else
+		stk->sorted = (int*)malloc(sizeof(int) * size);
+	i = 0;
+	a = (stack == 'a') ? stk->a : stk->b;
+	while (a)
+	{
+		stk->sorted[i++] = a->nr;
+		a = a->next;
+	}
+	radix(stk->sorted, size);
+	stk->med_val = stk->sorted[size / 2];
 }

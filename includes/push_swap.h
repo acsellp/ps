@@ -29,12 +29,11 @@ typedef struct		s_stack
 typedef struct		s_stacks
 {
 	int				*sorted;
-	t_stack			*stack_a;
-	t_stack			*stack_b;
-	size_t			size_a;
-	size_t			size_b;
+	t_stack			*a;
+	t_stack			*b;
+	size_t			sza;
+	size_t			szb;
 	int				med_val;
-	int				max;
 	int				pivot;
 	t_flags			flags;
 }					t_stacks;
@@ -80,8 +79,6 @@ void				exit_on_err(void);
 */
 
 int					select_first_half(t_stacks *stk, char stack);
-int					select_first_part_b(t_stacks *stk);
-int					select_first_part_a(t_stacks *stk);
 void				calc_med(t_stacks *stk);
 int					node_pos(int key, t_stack *stack);
 int					ret_min(t_stack *stack);
@@ -90,7 +87,7 @@ void				del_stacks(t_stacks **stk);
 int					sort(t_stacks *stk, int print);
 int					sort_(t_stacks *stk);
 void				read_from_file(char *file_name, t_stacks *stk);
-void				fill_stack_a(char **nbrs, int i, int sz, t_stacks *stk);
+void				fill_a(char **nbrs, int i, int sz, t_stacks *stk);
 
 /*
 **	list.c
@@ -106,6 +103,11 @@ int					sorted(t_stack *stack);
 **	push_swap.c
 */
 
+
+/*
+**	radix.c
+*/
 void				radix(int *a, size_t len);
+void				find_middle(t_stacks *stk, char stack);
 
 #endif	

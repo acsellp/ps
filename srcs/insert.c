@@ -3,9 +3,9 @@
 static void	del_head(t_stacks *stk, char stack)
 {
 	if (stack == 'a')
-		stk->stack_a = stk->stack_a->next;
+		stk->a = stk->a->next;
 	else if (stack == 'b')
-		stk->stack_b = stk->stack_b->next;
+		stk->b = stk->b->next;
 }
 
 void		delete(t_stacks *stk, char stack, int key)
@@ -14,9 +14,9 @@ void		delete(t_stacks *stk, char stack, int key)
 	t_stack	*prev;
 	
 	if (stack == 'a')
-		tmp = stk->stack_a;
+		tmp = stk->a;
 	else if (stack == 'b')
-		tmp = stk->stack_b;
+		tmp = stk->b;
 	prev = tmp;
 	while (tmp)
 	{
@@ -67,18 +67,18 @@ void		print_stacks(char *oper, t_stacks *stk, int f, int cut)
 
 	cut = 1;
 	
-	i = (max = stk->size_a > stk->size_b ? stk->size_a : stk->size_b);
+	i = (max = stk->sza > stk->szb ? stk->sza : stk->szb);
 	ft_printf("\n> %s:\n_______________________\n", oper);
 	while (i--)
 	{
 		if (f != MAX_INT && cut == 0 && max > 50 && i < max - 15)
 			cut_the_crap(&i, &cut);
-		if ((n = ret_stack_(stk->stack_a, max - i)))
+		if ((n = ret_stack_(stk->a, max - i)))
 			(n->nr == f && stk->flags.color) ? \
 			ft_printf("|%s%10 d%s|", G, n->nr, E) : ft_printf("|%10 d|", n->nr);
 		else
 			ft_printf("|%11  |");
-		if ((n = ret_stack_(stk->stack_b, max - i)))
+		if ((n = ret_stack_(stk->b, max - i)))
 			(n->nr == f && stk->flags.color) ? \
 			ft_printf("%s%10 d%s|\n", G, n->nr, E) : \
 				ft_printf("%10 d|\n", n->nr);
@@ -94,18 +94,18 @@ void		insert(t_stacks *stk, char stack, int key)
 	t_stack	*n;
 	
 	if (stack == 'a')
-		tmp = stk->stack_a;
+		tmp = stk->a;
 	else
-		tmp = stk->stack_b;
+		tmp = stk->b;
 	if (tmp == NULL)
 	{
 		tmp = (t_stack*)malloc(sizeof(t_stack));
 		tmp->nr = key;
 		tmp->next = NULL;
 		if (stack == 'a')
-			stk->stack_a = tmp;
+			stk->a = tmp;
 		else if (stack == 'b')
-			stk->stack_b = tmp;
+			stk->b = tmp;
 	}
 	else
 	{

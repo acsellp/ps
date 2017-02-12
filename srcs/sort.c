@@ -7,91 +7,22 @@ int			select_first_half(t_stacks *stk, char stack)
 	int		ps;
 
 	ps = 0;
-	if (stack == 'a' && (count = stk->size_a))
-		stk->pivot = stk->size_a / 2;
-	else if (stack == 'b' && (count = stk->size_b))
-		stk->pivot = stk->size_b / 2;
+	if (stack == 'a' && (count = stk->sza))
+		stk->pivot = stk->sza / 2;
+	else if (stack == 'b' && (count = stk->szb))
+		stk->pivot = stk->szb / 2;
 	while (count != 0)
 	{
-		s = (stack == 'a') ? stk->stack_a : stk->stack_b;
+		s = (stack == 'a') ? stk->a : stk->b;
 		if (s->nr <= stk->med_val && ++ps)
-			(stack == 'a') ? pb(stk, 1) : pa(stk, 1);
+			(stack == 'a') ? pb(stk, 1) : rb(stk, 1);
 		else if (ps <= stk->pivot)
-			(stack == 'a') ? ra(stk, 1) : rb(stk, 1);
+			(stack == 'a') ? ra(stk, 1) : pa(stk, 1);
 		if (ps > stk->pivot)
 			break ;
 		count--;
 	}
 	return (ps);
-}
-
-int			select_first_part_a(t_stacks *stk)
-{
-	t_stack	*s;
-	int		count;
-	int		pbs;
-	int		pivot;
-	
-	pbs = 0;
-	pivot = stk->size_a / stk->pivot;
-	count = stk->size_a;
-	while (count != 0)
-	{
-		s = stk->stack_a;
-		if (s->nr <= stk->med_val && ++pbs)
-			pb(stk, 1);
-		else if (pbs <= pivot)
-			ra(stk, 1);
-		if (pbs > pivot)
-			break ;
-		count--;
-	}
-	return (pbs);
-}
-
-void		calc_med(t_stacks *stk)
-{
-	t_stack		*a;
-	int			pos;
-
-	sort(stk, 0);
-	a = stk->stack_a;
-	pos = stk->size_a / stk->pivot;
-	while (a && pos)
-	{
-		a = a->next;
-		if (--pos == 0)
-			break ;
-	}
-	if (a)
-		stk->med_val = a->nr;
-	else
-		stk->med_val = 0;
-}
-
-
-int			select_first_part_b(t_stacks *stk)
-{
-	t_stack	*s;
-	int		count;
-	int		pas;
-	int		pivot;
-	
-	pas = 0;
-	pivot = stk->size_b / stk->pivot;
-	count = stk->size_b;
-	while (count != 0)
-	{
-		s = stk->stack_b;
-		if (s->nr >= stk->med_val && ++pas)
-			pa(stk, 1);
-		else if (pas <= pivot)
-			rb(stk, 1);
-		if (pas > pivot)
-			break ;
-		count--;
-	}
-	return (pas);
 }
 
 int			descending(t_stack *stack)
@@ -204,196 +135,91 @@ int			sort_(t_stacks *stk)
 	int		next_min;
 	int		pbs;
 	
-	if (stk->flags.debug)
-		print_stacks("Init a and b", stk, MAX_INT, 0);
-	select_first_half(stk, 'a');
-	if (stk->flags.debug)
-		ft_printf("\t\tSELECTED FIRST PART [%d]",stk->med_val);
-	
-	//
-	//	SELECT crest part
-	//
 	pbs = 0;
-	while (1)
+	while (!sorted(stk->a))
 	{
-		if (sorted(stk->stack_a))
-			break ;
-		min = ret_min(stk->stack_a);
-		if (stk->size_a > 2 &&  first(stk->stack_a) != min)
+		min = ret_min(stk->a);
+		if (stk->sza > 2 && stk->a->nr != min)
 		{
-			if ((stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a)) &&\
-				(stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b)))
+			ss(stk);
+			sb(stk, 1);
+			pos = node_pos(min, stk->a);
+			next_min = ret_next_min(stk->a, min);
+			while (stk->a->nr != min)
+			{
+				if (stk->a->nr == next_min || stk->a->nr == min)
+				{
+					pb(stk, 1);
+					pbs++;
+					next_min = ret_next_min(stk->a, next_min);
+				}
 				ss(stk);
-			if (stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b))
 				sb(stk, 1);
-			
-			pos = node_pos(min, stk->stack_a);
-			next_min = ret_next_min(stk->stack_a, min);
-			if (pos > stk->size_a / 2)
-			{
-				while (first(stk->stack_a) != min)
-				{
-					if (stk->stack_a->nr == next_min || stk->stack_a->nr == min)
-					{
-						pb(stk, 1);
-						pbs++;
-						
-						if (stk->flags.debug)
-							ft_printf("\nprev min %d | next one ",next_min);
-						next_min = ret_next_min(stk->stack_a, next_min);
-						if (stk->flags.debug)
-							ft_printf("%d \n\n",next_min);
-					}
-					if ((stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a)) &&\
-						(stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b)))
-						ss(stk);
-					if (stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b))
-						sb(stk, 1);
-					
-					rra(stk, 1);
-				}
-			}
-			else
-			{
-				while (first(stk->stack_a) != min)
-				{
-					if (stk->stack_a->nr == next_min || stk->stack_a->nr == min)
-					{
-						pb(stk, 1);
-						pbs++;
-
-						if (stk->flags.debug)
-							ft_printf("\nprev min %d | next one ",next_min);
-						next_min = ret_next_min(stk->stack_a, next_min);
-						if (stk->flags.debug)
-							ft_printf("%d \n\n",next_min);
-					}
-					if ((stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a)) &&\
-						(stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b)))
-						ss(stk);
-					if (stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b))
-						sb(stk, 1);
-						
-					ra(stk, 1);
-				}
+				(pos > stk->sza / 2) ? rra(stk, 1) : ra(stk, 1);
 			}
 		}
-		else if (stk->size_a <= 3 && first(stk->stack_a) > second(stk->stack_a))
-			sa(stk, 1);
-		if (!sorted(stk->stack_a) && stk->size_a > 2 && ++pbs)
+		sa(stk, 1);
+		if (!sorted(stk->a) && stk->sza > 2 && ++pbs)
 			pb(stk, 1);
 	}
+	
+	
 	//print_stacks("1 part ", stk, MAX_INT, 1);
 	//return (0);
 	if (stk->flags.debug)
 		ft_printf("\n   SECOND PART DONE\n");
-
 	if (stk->flags.debug)
 		ft_printf("\n   MOVING BACK %d nodes\n", pbs);
+	
+	
 	while (pbs-- > 0)
 	{
-
 		pa(stk, 1);
-
-		if ((stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a)) &&\
-			(stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b)))
-			ss(stk);
-		if (stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a))
-			sa(stk, 1);
-		if (stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b))
-			sb(stk, 1);
-		
+		ss(stk);	 
+		sa(stk, 1);
+		sb(stk, 1);
 	}
 	if (stk->flags.debug)
 		ft_printf("\n   MOVED TO A\n");
-	//print_stacks("1 part ", stk, MAX_INT, 1);
-	//return (0);
+	
+	if (stk->med_val == 26)
+		return 1;
+	find_middle(stk, 'b');
+	select_first_half(stk, 'b');
+	
+	ft_printf("begin");
+	sort_(stk);
+	ft_printf("finish");
 	
 	
 	
 	int max;
 	int	next_max;
-	while (1)
+	while (stk->b)
 	{
-		if (!stk->stack_b)
-			break ;
-		max = ret_max(stk->stack_b);
-		if (stk->size_b > 2 &&  first(stk->stack_b) != max)
+		max = ret_max(stk->b);
+		if (stk->szb > 2 &&  stk->b->nr != max)
 		{
-			if ((stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a)) &&\
-				(stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b)))
-				ss(stk);
-			if (stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a))
-				sa(stk, 1);
-			
-			pos = node_pos(max, stk->stack_b);
-			next_max = ret_next_max(stk->stack_b, max);
-			if (pos > stk->size_b / 2)
-			{
-				while (first(stk->stack_b) != max)
-				{
-					if (stk->stack_b->nr == next_max || stk->stack_b->nr == max)
-					{
-						pa(stk, 1);
-						if (stk->flags.debug)
-							ft_printf("\nprev max %d | next one ",next_max);
-						next_max = ret_next_max(stk->stack_b, next_max);
-						if (stk->flags.debug)
-							ft_printf("%d \n\n",next_max);
-					}
-					
-					if ((stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a)) &&\
-						(stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b)))
-						ss(stk);
-					if (stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a))
-						sa(stk, 1);
-					rrb(stk, 1);
-					
-					if ((stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a)) &&\
-						(stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b)))
-						ss(stk);
-					if (stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a))
-						sa(stk, 1);
-				}
-			}
-			else
-			{
-				while (first(stk->stack_b) != max)
-				{
-					if (stk->stack_b->nr == next_max || stk->stack_b->nr == max)
-					{
-						pa(stk, 1);
-
-						if (stk->flags.debug)
-							ft_printf("\nprev max %d | next one ",next_max);
-						next_max = ret_next_max(stk->stack_b, next_max);
-						if (stk->flags.debug)
-							ft_printf("%d \n\n",next_max);
-					}
-					if ((stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a)) &&\
-						(stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b)))
-						ss(stk);
-					if (stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a))
-						sa(stk, 1);
-					rb(stk, 1);
-					
-					if ((stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a)) &&\
-						(stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b)))
-						ss(stk);
-					if (stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a))
-						sa(stk, 1);
-				}
-			}
-
-		}
-		if (stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a))
+			ss(stk);
 			sa(stk, 1);
-		//if (!sorted(stk->stack_b) && stk->size_b > 2)
-			pa(stk, 1);
+			pos = node_pos(max, stk->b);
+			next_max = ret_next_max(stk->b, max);
+			while (stk->b->nr != max)
+			{
+				if (stk->b->nr == next_max || stk->b->nr == max)
+				{
+					pa(stk, 1);
+					next_max = ret_next_max(stk->b, next_max);
+				}
+				ss(stk);
+				sa(stk, 1);
+				(pos > stk->szb / 2) ? rrb(stk, 1) : rb(stk, 1);
+			}
+		}
+		sa(stk, 1);
+		pa(stk, 1);
 	}
-	
-	
-	return (sorted(stk->stack_a));
+	return (sorted(stk->a));
 }
 
 
@@ -411,23 +237,23 @@ int			sort(t_stacks *stk, int print)
 		print_stacks("Init a and b", stk, MIN_INT, 0);
 	while (1)
 	{
-		if (sorted(stk->stack_a))
+		if (sorted(stk->a))
 			break ;
-		min = ret_min(stk->stack_a);
-		if (stk->size_a > 2 &&  first(stk->stack_a) != min)
+		min = ret_min(stk->a);
+		if (stk->sza > 2 &&  stk->a->nr != min)
 		{
-			pos = node_pos(min, stk->stack_a);
-			next_min = ret_next_min(stk->stack_a, min);
-			if (pos > stk->size_a / 2)
+			pos = node_pos(min, stk->a);
+			next_min = ret_next_min(stk->a, min);
+			if (pos > stk->sza / 2)
 			{
-				while (first(stk->stack_a) != min)
+				while (stk->a->nr != min)
 				{
-					if (stk->stack_a->nr == next_min || stk->stack_a->nr == min)
+					if (stk->a->nr == next_min || stk->a->nr == min)
 					{
 						pb(stk, print);
-						if (stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b))
+						if (stk->szb >= 2 && first(stk->b) < stk->b->next->nr)
 							sb(stk, print);
-						next_min = ret_next_min(stk->stack_a, next_min);
+						next_min = ret_next_min(stk->a, next_min);
 					}
 					else
 						rra(stk, print);
@@ -435,61 +261,60 @@ int			sort(t_stacks *stk, int print)
 			}
 			else
 			{
-				while (first(stk->stack_a) != min)
+				while (stk->a->nr != min)
 				{
-					if (stk->stack_a->nr == next_min || stk->stack_a->nr == min)
+					if (stk->a->nr == next_min || stk->a->nr == min)
 					{
 						pb(stk, print);
-						if (stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b))
+						if (stk->szb >= 2 && first(stk->b) < stk->b->next->nr)
 							sb(stk, print);
-						next_min = ret_next_min(stk->stack_a, next_min);
+						next_min = ret_next_min(stk->a, next_min);
 					}
 					else
 						ra(stk, print);
 				}
 			}
 /*
-			if ((stk->size_a > 2 && plast(stk->stack_a) > last(stk->stack_a)) && \
-				(stk->size_b > 2 && plast(stk->stack_b) < last(stk->stack_b)))
+			if ((stk->sza > 2 && plast(stk->a) > last(stk->a)) && \
+				(stk->szb > 2 && plast(stk->b) < last(stk->b)))
 				rrr(stk);
-			if (stk->size_a > 2 && first(stk->stack_a) > last(stk->stack_a))
+			if (stk->sza > 2 && stk->a->nr > last(stk->a))
 				rra(stk, 1);
-			if (stk->size_b > 2 && plast(stk->stack_b) < last(stk->stack_b))
+			if (stk->szb > 2 && plast(stk->b) < last(stk->b))
 				rrb(stk, 1);		
 			
-			if ((stk->size_a > 2 && first(stk->stack_a) > last(stk->stack_a)) && \
-				(stk->size_b > 2 && first(stk->stack_b) < last(stk->stack_b)))
+			if ((stk->sza > 2 && stk->a->nr > last(stk->a)) && \
+				(stk->szb > 2 && first(stk->b) < last(stk->b)))
 				rr(stk);
-			if (stk->size_a > 2 && first(stk->stack_a) > last(stk->stack_a))
+			if (stk->sza > 2 && stk->a->nr > last(stk->a))
 				ra(stk, 1);
-			if (stk->size_b > 2 && first(stk->stack_b) < last(stk->stack_b))
+			if (stk->szb > 2 && first(stk->b) < last(stk->b))
 				rb(stk, 1);	
 
-			if ((stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a)) &&\
-				(stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b)))
+			if ((stk->sza >= 2 && stk->a->nr > stk->a->next->nr) &&\
+				(stk->szb >= 2 && first(stk->b) < stk->b->next->nr))
 				ss(stk);
-			if (stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a))
+			 
 				sa(stk, 1);
-			if (stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b))
+			if (stk->szb >= 2 && first(stk->b) < stk->b->next->nr)
 				sb(stk, 1);
 */
 		}
-		if (!sorted(stk->stack_a) && stk->size_a > 2)
+		if (!sorted(stk->a) && stk->sza > 2)
 			pb(stk, print);
 
-		while (!descending(stk->stack_b))
+		while (!descending(stk->b))
 		{
-			if (stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b))
+			if (stk->szb >= 2 && first(stk->b) < stk->b->next->nr)
 				sb(stk, print);
-			if (stk->size_b > 2 && plast(stk->stack_b) < last(stk->stack_b))
+			if (stk->szb > 2 && plast(stk->b) < last(stk->b))
 				rrb(stk, print);
 		}
-		if (stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a))
-			sa(stk, print);
+		sa(stk, print);
 	}
-	while (stk->size_b != 0)
+	while (stk->szb != 0)
 		pa(stk, print);
-	return (sorted(stk->stack_a));
+	return (sorted(stk->a));
 }
 
 
@@ -499,12 +324,11 @@ t_stacks	*init_stacks(void)
 	t_stacks	*stk;
 	
 	stk = (t_stacks*)malloc(sizeof(t_stacks));
-	stk->stack_a = NULL;
-	stk->stack_b = NULL;
-	stk->size_a = 0;
-	stk->size_b = 0;
+	stk->a = NULL;
+	stk->b = NULL;
+	stk->sza = 0;
+	stk->szb = 0;
 	stk->med_val = 0;
-	stk->max = 0;
 	stk->pivot = 2;
 	stk->sorted = NULL;
 	stk->flags.debug = 0;
@@ -517,13 +341,13 @@ void		del_stacks(t_stacks **stk)
 {
 	t_stack	*n;
 	
-	n = (*stk)->stack_a;
+	n = (*stk)->a;
 	while(n)
 	{
 		delete(*stk, 'a', n->nr);
 		n = n->next;
 	}
-	n = (*stk)->stack_b;
+	n = (*stk)->b;
 	while(n)
 	{
 		delete(*stk, 'b', n->nr);
@@ -534,19 +358,17 @@ void		del_stacks(t_stacks **stk)
 	free(*stk);
 }
 
-void		fill_stack_a(char **nbrs, int i, int sz, t_stacks *stk)
+void		fill_a(char **nbrs, int i, int sz, t_stacks *stk)
 {
 	long long	nr;
 	
 	while(i < sz)
 	{
 		nr = atol_base(nbrs[i], 10);
-		if (check_range(nr) || check_doubles(stk->stack_a, nr))
+		if (check_range(nr) || check_doubles(stk->a, nr))
 			exit_on_err();
-		if (stk->max < nr)
-			stk->max = nr;
 		insert(stk, 'a', nr);
-		stk->size_a++;
+		stk->sza++;
 		i++;
 	}
 }
@@ -571,7 +393,7 @@ void		read_from_file(char *file_name, t_stacks *stk)
 	nr = ft_strsplit(ret, '\n');
 	size = 0;
 	while (nr[size++]);
-	fill_stack_a(nr, 0, size - 1, stk);
+	fill_a(nr, 0, size - 1, stk);
 	free(ret);
 	size = 0;
 	while (nr[size])
