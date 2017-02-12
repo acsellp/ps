@@ -1,6 +1,31 @@
 #include "push_swap.h"
 
-int			select_first_part(t_stacks *stk)
+int			select_first_half(t_stacks *stk, char stack)
+{
+	t_stack	*s;
+	int		count;
+	int		ps;
+
+	ps = 0;
+	if (stack == 'a' && (count = stk->size_a))
+		stk->pivot = stk->size_a / 2;
+	else if (stack == 'b' && (count = stk->size_b))
+		stk->pivot = stk->size_b / 2;
+	while (count != 0)
+	{
+		s = (stack == 'a') ? stk->stack_a : stk->stack_b;
+		if (s->nr <= stk->med_val && ++ps)
+			(stack == 'a') ? pb(stk, 1) : pa(stk, 1);
+		else if (ps <= stk->pivot)
+			(stack == 'a') ? ra(stk, 1) : rb(stk, 1);
+		if (ps > stk->pivot)
+			break ;
+		count--;
+	}
+	return (ps);
+}
+
+int			select_first_part_a(t_stacks *stk)
 {
 	t_stack	*s;
 	int		count;
@@ -42,6 +67,31 @@ void		calc_med(t_stacks *stk)
 		stk->med_val = a->nr;
 	else
 		stk->med_val = 0;
+}
+
+
+int			select_first_part_b(t_stacks *stk)
+{
+	t_stack	*s;
+	int		count;
+	int		pas;
+	int		pivot;
+	
+	pas = 0;
+	pivot = stk->size_b / stk->pivot;
+	count = stk->size_b;
+	while (count != 0)
+	{
+		s = stk->stack_b;
+		if (s->nr >= stk->med_val && ++pas)
+			pa(stk, 1);
+		else if (pas <= pivot)
+			rb(stk, 1);
+		if (pas > pivot)
+			break ;
+		count--;
+	}
+	return (pas);
 }
 
 int			descending(t_stack *stack)
@@ -150,16 +200,16 @@ int			ret_next_max(t_stack *stack, int curr)
 int			sort_(t_stacks *stk)
 {
 	int		min;
-	int		pos;
+	size_t	pos;
 	int		next_min;
 	int		pbs;
 	
 	if (stk->flags.debug)
 		print_stacks("Init a and b", stk, MAX_INT, 0);
-	select_first_part(stk);
+	select_first_half(stk, 'a');
 	if (stk->flags.debug)
 		ft_printf("\t\tSELECTED FIRST PART [%d]",stk->med_val);
-	//return (0);
+	
 	//
 	//	SELECT crest part
 	//
@@ -233,6 +283,8 @@ int			sort_(t_stacks *stk)
 		if (!sorted(stk->stack_a) && stk->size_a > 2 && ++pbs)
 			pb(stk, 1);
 	}
+	//print_stacks("1 part ", stk, MAX_INT, 1);
+	//return (0);
 	if (stk->flags.debug)
 		ft_printf("\n   SECOND PART DONE\n");
 
@@ -240,13 +292,9 @@ int			sort_(t_stacks *stk)
 		ft_printf("\n   MOVING BACK %d nodes\n", pbs);
 	while (pbs-- > 0)
 	{
-		//ft_printf("pbs-- %d\n",pbs);
-		
-		//
-		//	pa -> ss
-		//
+
 		pa(stk, 1);
-		//printf("\n-[%d]-\n",pbs);
+
 		if ((stk->size_a >= 2 && first(stk->stack_a) > second(stk->stack_a)) &&\
 			(stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b)))
 			ss(stk);
@@ -254,17 +302,17 @@ int			sort_(t_stacks *stk)
 			sa(stk, 1);
 		if (stk->size_b >= 2 && first(stk->stack_b) < second(stk->stack_b))
 			sb(stk, 1);
+		
 	}
 	if (stk->flags.debug)
 		ft_printf("\n   MOVED TO A\n");
+	//print_stacks("1 part ", stk, MAX_INT, 1);
+	//return (0);
+	
+	
 	
 	int max;
 	int	next_max;
-	
-	
-	//
-	//	ss !!!!!
-	//
 	while (1)
 	{
 		if (!stk->stack_b)
@@ -356,7 +404,7 @@ int			sort_(t_stacks *stk)
 int			sort(t_stacks *stk, int print)
 {
 	int		min;
-	int		pos;
+	size_t	pos;
 	int		next_min;
 	
 	if (stk->flags.debug && print == 1)
@@ -456,7 +504,9 @@ t_stacks	*init_stacks(void)
 	stk->size_a = 0;
 	stk->size_b = 0;
 	stk->med_val = 0;
+	stk->max = 0;
 	stk->pivot = 2;
+	stk->sorted = NULL;
 	stk->flags.debug = 0;
 	stk->flags.color = 0;
 	stk->flags.open_file = 0;
@@ -479,6 +529,8 @@ void		del_stacks(t_stacks **stk)
 		delete(*stk, 'b', n->nr);
 		n = n->next;
 	}
+	if ((*stk)->sorted)
+		free((*stk)->sorted);
 	free(*stk);
 }
 
@@ -491,6 +543,8 @@ void		fill_stack_a(char **nbrs, int i, int sz, t_stacks *stk)
 		nr = atol_base(nbrs[i], 10);
 		if (check_range(nr) || check_doubles(stk->stack_a, nr))
 			exit_on_err();
+		if (stk->max < nr)
+			stk->max = nr;
 		insert(stk, 'a', nr);
 		stk->size_a++;
 		i++;

@@ -19,7 +19,23 @@ int			main(int ac, char **av)
 		fill_stack_a(av, 1, ac, sorted);
 	
 	
-	//sort(stk, 1);
+	stk->sorted = (int*)malloc(sizeof(int) * stk->size_a);
+	t_stack *a;
+	size_t i = 0;
+	a = stk->stack_a;
+	while (a)
+	{
+		stk->sorted[i++] = a->nr;
+		a = a->next;
+	}
+	
+	
+	ft_printf("\n\nsize a %d\n",stk->size_a);
+	i = 0;
+	while (i < stk->size_a)
+		ft_printf("%d ",stk->sorted[i++]);
+	radix(stk->sorted, stk->size_a);
+	
 	
 	
 	calc_med(sorted);
@@ -38,6 +54,12 @@ int			main(int ac, char **av)
 		ft_printf("\nSTACK IS SORTED\n");
 	else if (stk->flags.debug)
 		ft_printf("\nNOT SORTED\n");
+	
+	ft_printf("\n\nsize a %d\n",stk->size_a);
+	i = 0;
+	while (i < stk->size_a)
+		ft_printf("%d ",stk->sorted[i++]);
+	
 	del_stacks(&stk);
 	del_stacks(&sorted);
 	return (0);

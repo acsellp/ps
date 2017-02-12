@@ -34,8 +34,6 @@ void			pb(t_stacks *stk, int print)
 	if (print == 1)
 		stk->flags.debug == 1 ? \
 		print_stacks("Exec pb", stk, stk->stack_b->nr, 0) : ft_printf("pb\n");
-	//if (stk->size_b >= 2 && first(stk->stack_b) < last(stk->stack_b))
-	//	rb(stk); 
 }
 
 void			sa(t_stacks *stk, int print)
