@@ -33,6 +33,7 @@ typedef struct		s_stacks
 	t_stack			*b;
 	size_t			sza;
 	size_t			szb;
+	size_t			ccnt;
 	int				med_val;
 	int				pivot;
 	t_flags			flags;
@@ -42,8 +43,8 @@ typedef struct		s_stacks
 **	operations.c
 */
 
-void				pa(t_stacks *stk, int print);
-void				pb(t_stacks *stk, int print);
+int					pa(t_stacks *stk, int print);
+int					pb(t_stacks *stk, int print);
 void				sa(t_stacks *stk, int print);
 void				sb(t_stacks *stk, int print);
 void				ss(t_stacks *stk);
@@ -78,7 +79,15 @@ void				exit_on_err(void);
 **	sort.c
 */
 
-int					select_first_half(t_stacks *stk, char stack);
+int			sorting(t_stacks *stk);
+int			select_bottom_halfn(t_stacks *stk, char stack, int size);
+int			select_top_halfn(t_stacks *stk, char stack, int size);
+
+
+
+
+int					select_top_half(t_stacks *stk, char stack);
+int					select_bottom_half(t_stacks *stk, char stack);
 void				calc_med(t_stacks *stk);
 int					node_pos(int key, t_stack *stack);
 int					ret_min(t_stack *stack);
@@ -109,5 +118,6 @@ int					sorted(t_stack *stack);
 */
 void				radix(int *a, size_t len);
 void				find_middle(t_stacks *stk, char stack);
+void		find_middle_in_interval(t_stacks *stk, char stack, size_t n);
 
 #endif	

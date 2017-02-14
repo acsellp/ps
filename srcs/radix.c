@@ -80,3 +80,26 @@ void		find_middle(t_stacks *stk, char stack)
 	radix(stk->sorted, size);
 	stk->med_val = stk->sorted[size / 2];
 }
+
+void		find_middle_in_interval(t_stacks *stk, char stack, size_t n)
+{
+	t_stack *a;
+	size_t	i;
+	
+	if (stk->sorted)
+	{
+		free(stk->sorted);
+		stk->sorted = (int*)malloc(sizeof(int) * n);
+	}
+	else
+		stk->sorted = (int*)malloc(sizeof(int) * n);
+	i = 0;
+	a = (stack == 'a') ? stk->a : stk->b;
+	while (a && i < n)
+	{
+		stk->sorted[i++] = a->nr;
+		a = a->next;
+	}
+	radix(stk->sorted, n);
+	stk->med_val = stk->sorted[n / 2];
+}

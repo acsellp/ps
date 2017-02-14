@@ -1,11 +1,11 @@
 #include "push_swap.h"
 
-void			pa(t_stacks *stk, int print)
+int				pa(t_stacks *stk, int print)
 {
 	t_stack	*new;
 	
 	if (stk->b == NULL)
-		return ;
+		return (-1);
 	new = (t_stack*)malloc(sizeof(t_stack));
 	stk->szb > 0 ? stk->szb-- : 0;
 	stk->sza++;
@@ -16,14 +16,15 @@ void			pa(t_stacks *stk, int print)
 	if (print == 1)
 		stk->flags.debug == 1 ? \
 		print_stacks("Exec pa", stk, stk->a->nr, 0) : ft_printf("pa\n");
+	return (1);
 }
 
-void			pb(t_stacks *stk, int print)
+int				pb(t_stacks *stk, int print)
 {
 	t_stack	*new;
 	
 	if (stk->a == NULL)
-		return ;
+		return (-1);
 	new = (t_stack*)malloc(sizeof(t_stack));
 	stk->sza > 0 ? stk->sza-- : 0;
 	stk->szb++;
@@ -34,6 +35,7 @@ void			pb(t_stacks *stk, int print)
 	if (print == 1)
 		stk->flags.debug == 1 ? \
 		print_stacks("Exec pb", stk, stk->b->nr, 0) : ft_printf("pb\n");
+	return (1);
 }
 
 void			sa(t_stacks *stk, int print)
