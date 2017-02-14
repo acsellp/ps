@@ -35,7 +35,7 @@ static void	rad_sort_u(unsigned *from, unsigned *to, unsigned bit)
 	rad_sort_u(lft, to, bit);
 }
 
-void		radix(int *stack, size_t size)
+static void	radix_(int *stack, size_t size)
 {
 	size_t		i;
 	unsigned	*x;
@@ -56,50 +56,31 @@ void		radix(int *stack, size_t size)
 	}
 }
 
-void		find_middle(t_stacks *stk, char stack)
+void		radix(t_stacks *stk)
 {
 	t_stack *a;
-	size_t	size;
-	size_t	i;
+	int		i;
 	
-	size = (stack == 'a') ? stk->sza : stk->szb;
 	if (stk->sorted)
 	{
 		free(stk->sorted);
-		stk->sorted = (int*)malloc(sizeof(int) * size);
+		stk->sorted = (int*)malloc(sizeof(int) * stk->sza);
 	}
 	else
-		stk->sorted = (int*)malloc(sizeof(int) * size);
+		stk->sorted = (int*)malloc(sizeof(int) * stk->sza);
+	a = stk->a;
 	i = 0;
-	a = (stack == 'a') ? stk->a : stk->b;
 	while (a)
 	{
 		stk->sorted[i++] = a->nr;
 		a = a->next;
 	}
-	radix(stk->sorted, size);
-	stk->med_val = stk->sorted[size / 2];
+	radix_(stk->sorted, stk->sza);
 }
 
-void		find_middle_in_interval(t_stacks *stk, char stack, size_t n)
+void		set_middle(t_stacks *stk, size_t top)
 {
-	t_stack *a;
-	size_t	i;
-	
-	if (stk->sorted)
-	{
-		free(stk->sorted);
-		stk->sorted = (int*)malloc(sizeof(int) * n);
-	}
-	else
-		stk->sorted = (int*)malloc(sizeof(int) * n);
-	i = 0;
-	a = (stack == 'a') ? stk->a : stk->b;
-	while (a && i < n)
-	{
-		stk->sorted[i++] = a->nr;
-		a = a->next;
-	}
-	radix(stk->sorted, n);
-	stk->med_val = stk->sorted[n / 2];
+	stk->low_mid = stk->sorted[stk->curr_pos + top / 2];
+	stk->top_mid = stk->sorted[stk->curr_pos + top];
+	stk->curr_pos += top;
 }

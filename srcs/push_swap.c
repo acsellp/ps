@@ -10,6 +10,8 @@ int			main(int ac, char **av)
 		read_from_file(av[1], stk);
 	else
 		fill_a(av, 1, ac, stk);
+	stk->cnt = stk->sza;
+	radix(stk);
 	
 	if (stk->flags.debug)
 		print_stacks("Init a and b", stk, MAX_INT, 0);

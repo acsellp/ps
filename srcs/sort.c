@@ -162,7 +162,6 @@ void		sort_half_a(t_stacks *stk)
 	int		next_min;
 	int		pbs;
 	
-	stk->ccnt++;
 	pbs = 0;
 	while (!sorted(stk->a))
 	{
@@ -254,7 +253,30 @@ int			select_top_halfn(t_stacks *stk, char stack, int size)
 	return (ps);
 }
 
-int			select_halfn(t_stacks *stk, char stack, int top_mid, int low_mid)
+int			select_halfn(t_stacks *stk)
+{
+	t_stack	*a;
+	t_stack	*b;
+	size_t	count;
+
+	count = stk->sza;
+	while (count)
+	{
+		a = stk->a;
+		b = stk->b;
+		if (a->nr <= stk->top_mid)
+		{
+			pb(stk, 1);
+			(b && b->nr <= stk->low_mid) ? rr(stk) : 0;
+		}
+		else
+			ra(stk, 1);
+		count--;
+	}
+	return (1);
+}
+
+int			select_half(t_stacks *stk)
 {
 	t_stack	*s;
 	size_t	count;
@@ -264,16 +286,14 @@ int			select_halfn(t_stacks *stk, char stack, int top_mid, int low_mid)
 	count = stk->sza;
 	while (count)
 	{
-		s = (stack == 'a') ? stk->a : stk->b;
-		if (s->nr >= stk->med_val && s->nr <= top_mid)
+		s = stk->a;
+		if (s->nr <= stk->top_mid)
 		{
-			(stack == 'a') ? \
-			(pb(stk, 1) && ((stk->b && stk->b->nr <= low_mid) ? rb(stk, 1) : 0) \
-			 && ++ps) : pa(stk, 1) && ++ps;
+			pb(stk, 1);
+			(stk->b && stk->b->nr <= stk->low_mid) ? rb(stk, 1) : 0;
 		}
 		else
-			(stack == 'b') ? rb(stk, 1) : \
-				((stk->b && stk->b->nr <= low_mid) ? rr(stk) : ra(stk, 1));
+			(stk->b && stk->b->nr <= stk->low_mid) ? rr(stk) : ra(stk, 1);
 		count--;
 	}
 	return (ps);
@@ -285,27 +305,30 @@ int			sorting(t_stacks *stk)
 	int interv;
 	
 	//find_middle_in_interval(stk, 'a', stk->sza);
-	stk->med_val = 0;
-	interv = select_halfn(stk, 'a', 25, 12);
+	stk->top_mid = 25;
+	stk->low_mid = 12;
+	interv = select_half(stk);
 	//scanf("%d",&scan);
 	
-	stk->med_val = 26;
-	interv = select_halfn(stk, 'a', 50, 38);
+	stk->top_mid = 50;
+	stk->low_mid = 38;
+	interv = select_half(stk);
 	//scanf("%d",&scan);
 	
 	//find_middle_in_interval(stk, 'a', interv - 1);
-	stk->med_val = 51;
-	interv = select_halfn(stk, 'a', 75, 63);
+	stk->top_mid = 75;
+	stk->low_mid = 63;
+	interv = select_half(stk);
 	//scanf("%d",&scan);
 	
-	stk->med_val = 76;
-	interv = select_halfn(stk, 'a', 100, 88);
-	//scanf("%d",&scan);
-	
+	stk->top_mid = 100;
+	stk->low_mid = 88;
+	interv = select_half(stk);
 	//return 1;
 	//scanf("%d",&scan);
 	
-	ft_printf("sorting");
+	//ft_printf("sorting cccnt %ld",(int)stk->cnt);
+	//return 1;
 
 	//find_middle_in_interval(stk, 'a', stk->sza);
 	//interv = select_first_half(stk, 'a');
@@ -367,123 +390,6 @@ int			sorting(t_stacks *stk)
 
 
 
-int			sort_(t_stacks *stk)
-{
-
-	
-	sort_half_a(stk);
-	
-	if (stk->ccnt == 2)
-		return 1;
-	
-	find_middle(stk, 'b');
-	select_bottom_half(stk, 'b');
-	
-	ft_printf("begin");
-	sort_(stk);
-	ft_printf("finish");
-	
-	//print_stacks(".........", stk, MIN_INT, 0);
-	//return 1;
-	sort_half_b(stk);
-
-	return (1);
-}
-
-
-
-
-int			sort(t_stacks *stk, int print)
-{
-	int		min;
-	size_t	pos;
-	int		next_min;
-	
-	if (stk->flags.debug && print == 1)
-		print_stacks("Init a and b", stk, MIN_INT, 0);
-	while (1)
-	{
-		if (sorted(stk->a))
-			break ;
-		min = ret_min(stk->a);
-		if (stk->sza > 2 &&  stk->a->nr != min)
-		{
-			pos = node_pos(min, stk->a);
-			next_min = ret_next_min(stk->a, min);
-			if (pos > stk->sza / 2)
-			{
-				while (stk->a->nr != min)
-				{
-					if (stk->a->nr == next_min || stk->a->nr == min)
-					{
-						pb(stk, print);
-						if (stk->szb >= 2 && first(stk->b) < stk->b->next->nr)
-							sb(stk, print);
-						next_min = ret_next_min(stk->a, next_min);
-					}
-					else
-						rra(stk, print);
-				}
-			}
-			else
-			{
-				while (stk->a->nr != min)
-				{
-					if (stk->a->nr == next_min || stk->a->nr == min)
-					{
-						pb(stk, print);
-						if (stk->szb >= 2 && first(stk->b) < stk->b->next->nr)
-							sb(stk, print);
-						next_min = ret_next_min(stk->a, next_min);
-					}
-					else
-						ra(stk, print);
-				}
-			}
-/*
-			if ((stk->sza > 2 && plast(stk->a) > last(stk->a)) && \
-				(stk->szb > 2 && plast(stk->b) < last(stk->b)))
-				rrr(stk);
-			if (stk->sza > 2 && stk->a->nr > last(stk->a))
-				rra(stk, 1);
-			if (stk->szb > 2 && plast(stk->b) < last(stk->b))
-				rrb(stk, 1);		
-			
-			if ((stk->sza > 2 && stk->a->nr > last(stk->a)) && \
-				(stk->szb > 2 && first(stk->b) < last(stk->b)))
-				rr(stk);
-			if (stk->sza > 2 && stk->a->nr > last(stk->a))
-				ra(stk, 1);
-			if (stk->szb > 2 && first(stk->b) < last(stk->b))
-				rb(stk, 1);	
-
-			if ((stk->sza >= 2 && stk->a->nr > stk->a->next->nr) &&\
-				(stk->szb >= 2 && first(stk->b) < stk->b->next->nr))
-				ss(stk);
-			 
-				sa(stk, 1);
-			if (stk->szb >= 2 && first(stk->b) < stk->b->next->nr)
-				sb(stk, 1);
-*/
-		}
-		if (!sorted(stk->a) && stk->sza > 2)
-			pb(stk, print);
-
-		while (!descending(stk->b))
-		{
-			if (stk->szb >= 2 && first(stk->b) < stk->b->next->nr)
-				sb(stk, print);
-			if (stk->szb > 2 && plast(stk->b) < last(stk->b))
-				rrb(stk, print);
-		}
-		sa(stk, print);
-	}
-	while (stk->szb != 0)
-		pa(stk, print);
-	return (sorted(stk->a));
-}
-
-
 
 t_stacks	*init_stacks(void)
 {
@@ -496,6 +402,9 @@ t_stacks	*init_stacks(void)
 	stk->szb = 0;
 	stk->med_val = 0;
 	stk->pivot = 2;
+	stk->low_mid = 0;
+	stk->top_mid = 0;
+	stk->curr_pos = 0;
 	stk->sorted = NULL;
 	stk->flags.debug = 0;
 	stk->flags.color = 0;

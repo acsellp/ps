@@ -33,7 +33,12 @@ typedef struct		s_stacks
 	t_stack			*b;
 	size_t			sza;
 	size_t			szb;
-	size_t			ccnt;
+	size_t			cnt;
+	size_t			curr_pos;
+	int				top_mid;
+	int				low_mid;
+	
+	
 	int				med_val;
 	int				pivot;
 	t_flags			flags;
@@ -80,22 +85,19 @@ void				exit_on_err(void);
 */
 
 int			sorting(t_stacks *stk);
-int			select_halfn(t_stacks *stk, char stack, int top_mid, int low_mid);
+int			select_halfn(t_stacks *stk);
 
 int			select_top_halfn(t_stacks *stk, char stack, int size);
 
 
 
 
-int					select_top_half(t_stacks *stk, char stack);
-int					select_half(t_stacks *stk, char stack);
 void				calc_med(t_stacks *stk);
 int					node_pos(int key, t_stack *stack);
 int					ret_min(t_stack *stack);
 t_stacks			*init_stacks(void);
 void				del_stacks(t_stacks **stk);
-int					sort(t_stacks *stk, int print);
-int					sort_(t_stacks *stk);
+
 void				read_from_file(char *file_name, t_stacks *stk);
 void				fill_a(char **nbrs, int i, int sz, t_stacks *stk);
 
@@ -117,8 +119,8 @@ int					sorted(t_stack *stack);
 /*
 **	radix.c
 */
-void				radix(int *a, size_t len);
+void				radix(t_stacks *stk);
 void				find_middle(t_stacks *stk, char stack);
-void		find_middle_in_interval(t_stacks *stk, char stack, size_t n);
+void				set_middle(t_stacks *stk, size_t top);
 
 #endif	
