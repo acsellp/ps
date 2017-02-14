@@ -39,7 +39,7 @@ void		print_stacks(char *oper, t_stacks *stk, int f, int cut)
 			cut_the_crap(&i, &cut);
 		if ((n = ret_stack_(stk->a, max - i)))
 			(n->nr == f && stk->flags.color) ? \
-			ft_printf("|%s%10 d%s|", G, n->nr, E) : ft_printf("|%9 d|", n->nr);
+		ft_printf("|%s%10 d%s|", G, n->nr, E) : ft_printf("|%10 d|", n->nr);
 		else
 			ft_printf("|%11  |");
 		if ((n = ret_stack_(stk->b, max - i)))
