@@ -1,33 +1,10 @@
 #include "push_swap.h"
 
-int	first(t_stack *stack)
-{
-	return (stack->nr);
-}
 
-int	second(t_stack *stack)
+void		exit_on_err(void)
 {
-	return ((stack->next)->nr);
-}
-
-int	last(t_stack *stack)
-{
-	t_stack	*s;
-	
-	s = stack;
-	while (s->next)
-		s = s->next;
-	return (s->nr);
-}
-
-int	plast(t_stack *stack)
-{
-	t_stack	*s;
-	
-	s = stack;
-	while ((s->next)->next)
-		s = s->next;
-	return (s->nr);
+	ft_printf("Error\n");
+	exit (1);
 }
 
 int	sorted(t_stack *stack)

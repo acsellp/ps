@@ -35,7 +35,7 @@ static void	rad_sort_u(unsigned *from, unsigned *to, unsigned bit)
 	rad_sort_u(lft, to, bit);
 }
 
-static void	radix_(int *stack, size_t size)
+void	radix_(int *stack, size_t size)
 {
 	size_t		i;
 	unsigned	*x;
@@ -80,7 +80,10 @@ void		radix(t_stacks *stk)
 
 void		set_middle(t_stacks *stk, size_t top)
 {
-	stk->low_mid = stk->sorted[stk->curr_pos + top / 2];
-	stk->top_mid = stk->sorted[stk->curr_pos + top];
-	stk->curr_pos += top;
+	if (top)
+	{
+		stk->low_mid = stk->sorted[stk->curr_pos + (top - 1) / 2];
+		stk->top_mid = stk->sorted[stk->curr_pos + (top - 1)];
+		stk->curr_pos += top;
+	}
 }

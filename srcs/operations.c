@@ -1,6 +1,6 @@
 #include "push_swap.h"
 
-int				pa(t_stacks *stk, int print)
+int		pa(t_stacks *stk, int print)
 {
 	t_stack	*new;
 	
@@ -19,7 +19,7 @@ int				pa(t_stacks *stk, int print)
 	return (1);
 }
 
-int				pb(t_stacks *stk, int print)
+int		pb(t_stacks *stk, int print)
 {
 	t_stack	*new;
 	
@@ -38,7 +38,7 @@ int				pb(t_stacks *stk, int print)
 	return (1);
 }
 
-void			sa(t_stacks *stk, int print)
+void	sa(t_stacks *stk, int print)
 {
 	t_stack	*first;
 	int		tmp;
@@ -57,7 +57,7 @@ void			sa(t_stacks *stk, int print)
 	}
 }
 
-void			sb(t_stacks *stk, int print)
+void	sb(t_stacks *stk, int print)
 {
 	t_stack	*first;
 	int		tmp;
@@ -76,7 +76,7 @@ void			sb(t_stacks *stk, int print)
 	}
 }
 
-void			ss(t_stacks *stk)
+void	ss(t_stacks *stk)
 {
 	if ((stk->sza >= 2 && stk->a->nr > stk->a->next->nr) && \
 		(stk->szb >= 2 && stk->b->nr < stk->b->next->nr))
@@ -84,11 +84,11 @@ void			ss(t_stacks *stk)
 		sa(stk, 0);
 		sb(stk, 0);
 		stk->flags.debug == 1 ? \
-			print_stacks("Exec ss", stk, first(stk->a), 0) : ft_printf("ss\n");
+			print_stacks("Exec ss", stk, stk->a->nr, 0) : ft_printf("ss\n");
 	}
 }
 
-int				ra(t_stacks *stk, int print)
+int		ra(t_stacks *stk, int print)
 {
 	t_stack	*last;
 	t_stack	*first;
@@ -111,7 +111,7 @@ int				ra(t_stacks *stk, int print)
 	return (1);
 }
 
-int				rb(t_stacks *stk, int print)
+int		rb(t_stacks *stk, int print)
 {
 	t_stack	*last;
 	t_stack	*first;
@@ -134,7 +134,7 @@ int				rb(t_stacks *stk, int print)
 	return (1);
 }
 
-int				rr(t_stacks *stk)
+int		rr(t_stacks *stk)
 {
 	ra(stk, 0);
 	rb(stk, 0);
@@ -143,7 +143,7 @@ int				rr(t_stacks *stk)
 	return (1);
 }
 
-void			rra(t_stacks *stk, int print)
+void	rra(t_stacks *stk, int print)
 {
 	t_stack	*last;
 	t_stack	*first;
@@ -168,7 +168,7 @@ void			rra(t_stacks *stk, int print)
 		print_stacks("Exec rra", stk, tmp, 0) : ft_printf("rra\n");
 }
 
-void			rrb(t_stacks *stk, int print)
+void	rrb(t_stacks *stk, int print)
 {
 	t_stack	*last;
 	t_stack	*first;
@@ -193,7 +193,7 @@ void			rrb(t_stacks *stk, int print)
 		print_stacks("Exec rrb", stk, tmp, 0) : ft_printf("rrb\n");
 }
 
-void			rrr(t_stacks *stk)
+void	rrr(t_stacks *stk)
 {
 	rra(stk, 0);
 	rrb(stk, 0);

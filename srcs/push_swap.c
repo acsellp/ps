@@ -15,7 +15,6 @@ int			main(int ac, char **av)
 	
 	if (stk->flags.debug)
 		print_stacks("Init a and b", stk, MAX_INT, 0);
-
 	sorting(stk);
 	if (stk->flags.debug)
 		print_stacks("Done", stk, MAX_INT, 1);

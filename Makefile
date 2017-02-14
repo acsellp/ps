@@ -6,7 +6,10 @@ SRCS = srcs/push_swap.c \
 		srcs/sort.c \
 		srcs/list.c \
 		srcs/operations.c \
-		srcs/radix.c
+		srcs/radix.c \
+		srcs/debug.c \
+		srcs/algo_1.c \
+		srcs/algo_2.c
 
 INCL = -I./includes/
 

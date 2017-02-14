@@ -87,9 +87,3 @@ int			check_range(long long key)
 		return (1);
 	return (0);
 }
-
-void		exit_on_err(void)
-{
-	ft_printf("Error\n");
-	exit (1);
-}
