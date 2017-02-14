@@ -88,7 +88,7 @@ void			ss(t_stacks *stk)
 	}
 }
 
-void			ra(t_stacks *stk, int print)
+int				ra(t_stacks *stk, int print)
 {
 	t_stack	*last;
 	t_stack	*first;
@@ -96,7 +96,7 @@ void			ra(t_stacks *stk, int print)
 	
 	first = stk->a;
 	if (!first || first->next == NULL)
-		return ;
+		return (0);
 	last = first;
 	tmp = first->nr;
 	while (last->next)
@@ -108,9 +108,10 @@ void			ra(t_stacks *stk, int print)
 	if (print == 1)
 		stk->flags.debug == 1 ? \
 		print_stacks("Exec ra", stk, tmp, 0) : ft_printf("ra\n");
+	return (1);
 }
 
-void			rb(t_stacks *stk, int print)
+int				rb(t_stacks *stk, int print)
 {
 	t_stack	*last;
 	t_stack	*first;
@@ -118,7 +119,7 @@ void			rb(t_stacks *stk, int print)
 	
 	first = stk->b;
 	if (!first || first->next == NULL)
-		return ;
+		return (0);
 	last = first;
 	tmp = first->nr;
 	while (last->next)
@@ -130,14 +131,16 @@ void			rb(t_stacks *stk, int print)
 	if (print == 1)
 		stk->flags.debug == 1 ? \
 		print_stacks("Exec rb", stk, tmp, 0) : ft_printf("rb\n");
+	return (1);
 }
 
-void			rr(t_stacks *stk)
+int				rr(t_stacks *stk)
 {
 	ra(stk, 0);
 	rb(stk, 0);
 	stk->flags.debug == 1 ? \
 		print_stacks("Exec rr", stk, MAX_INT, 0) : ft_printf("rr\n");
+	return (1);
 }
 
 void			rra(t_stacks *stk, int print)

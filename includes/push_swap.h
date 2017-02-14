@@ -48,9 +48,9 @@ int					pb(t_stacks *stk, int print);
 void				sa(t_stacks *stk, int print);
 void				sb(t_stacks *stk, int print);
 void				ss(t_stacks *stk);
-void				ra(t_stacks *stk, int print);
-void				rb(t_stacks *stk, int print);
-void				rr(t_stacks *stk);
+int					ra(t_stacks *stk, int print);
+int					rb(t_stacks *stk, int print);
+int					rr(t_stacks *stk);
 void				rra(t_stacks *stk, int print);
 void				rrb(t_stacks *stk, int print);
 void				rrr(t_stacks *stk);
@@ -80,14 +80,15 @@ void				exit_on_err(void);
 */
 
 int			sorting(t_stacks *stk);
-int			select_bottom_halfn(t_stacks *stk, char stack, int size);
+int			select_halfn(t_stacks *stk, char stack, int top_mid, int low_mid);
+
 int			select_top_halfn(t_stacks *stk, char stack, int size);
 
 
 
 
 int					select_top_half(t_stacks *stk, char stack);
-int					select_bottom_half(t_stacks *stk, char stack);
+int					select_half(t_stacks *stk, char stack);
 void				calc_med(t_stacks *stk);
 int					node_pos(int key, t_stack *stack);
 int					ret_min(t_stack *stack);

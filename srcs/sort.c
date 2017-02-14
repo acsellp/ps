@@ -7,9 +7,9 @@ int			select_top_half(t_stacks *stk, char stack)
 	int		ps;
 
 	ps = 0;
-	if (stack == 'a' ) count = stk->sza;
+	if (stack == 'a') count = stk->sza;
 		//stk->pivot = stk->sza / 2;
-	else if (stack == 'b' ) count = stk->szb;
+	else if (stack == 'b') count = stk->szb;
 		//stk->pivot = stk->szb / 2;
 	while (count != 0)
 	{
@@ -201,8 +201,8 @@ void		sort_half_a(t_stacks *stk)
 
 void		sort_half_b(t_stacks *stk)
 {
-	int max;
-	int	next_max;
+	int		max;
+	int		next_max;
 	size_t	pos;
 	
 	while (stk->b)
@@ -231,12 +231,11 @@ void		sort_half_b(t_stacks *stk)
 	}
 }
 
-
 int			select_top_halfn(t_stacks *stk, char stack, int size)
 {
-	t_stack	*s;
-	int		count;
-	int		ps;
+	t_stack		*s;
+	int			count;
+	int			ps;
 
 	ps = 0;
 	count = 0;
@@ -255,26 +254,28 @@ int			select_top_halfn(t_stacks *stk, char stack, int size)
 	return (ps);
 }
 
-int			select_bottom_halfn(t_stacks *stk, char stack, int size)
+int			select_halfn(t_stacks *stk, char stack, int top_mid, int low_mid)
 {
 	t_stack	*s;
-	size_t		count;
+	size_t	count;
 	int		ps;
-
+	
 	ps = 0;
 	count = stk->sza;
 	while (count)
 	{
 		s = (stack == 'a') ? stk->a : stk->b;
-		if (s->nr >= stk->med_val && s->nr <= size)
-			(stack == 'a') ? (pb(stk, 1) && ++ps) : (pa(stk, 1) && ++ps);
-		else //if (ps <= stk->pivot)
-			(stack == 'b') ? rb(stk, 1) : ra(stk, 1);
-		//if (ps > stk->pivot)
-		//	break ;
+		if (s->nr >= stk->med_val && s->nr <= top_mid)
+		{
+			(stack == 'a') ? \
+			(pb(stk, 1) && ((stk->b && stk->b->nr <= low_mid) ? rb(stk, 1) : 0) \
+			 && ++ps) : pa(stk, 1) && ++ps;
+		}
+		else
+			(stack == 'b') ? rb(stk, 1) : \
+				((stk->b && stk->b->nr <= low_mid) ? rr(stk) : ra(stk, 1));
 		count--;
 	}
-	ft_printf("PBS %d vs stk pivot %d[%d]/ count %d",ps, stk->pivot,stk->med_val,count);
 	return (ps);
 }
 
@@ -283,43 +284,28 @@ int			sorting(t_stacks *stk)
 	int scan;
 	int interv;
 	
-	
 	//find_middle_in_interval(stk, 'a', stk->sza);
-	stk->med_val = 76;
-	interv = select_bottom_halfn(stk, 'a', 88);
+	stk->med_val = 0;
+	interv = select_halfn(stk, 'a', 25, 12);
 	//scanf("%d",&scan);
 	
-
-	stk->med_val = 51;
-	interv = select_bottom_halfn(stk, 'a', 62);
+	stk->med_val = 26;
+	interv = select_halfn(stk, 'a', 50, 38);
 	//scanf("%d",&scan);
 	
 	//find_middle_in_interval(stk, 'a', interv - 1);
-	stk->med_val = 26;
-	interv = select_bottom_halfn(stk, 'a', 37);
-	////scanf("%d",&scan);
-	
-	stk->med_val = 0;
-	interv = select_bottom_halfn(stk, 'a', 12);
-	//scanf("%d",&scan);
-	stk->med_val = 13;
-	interv = select_bottom_halfn(stk, 'a', 25);
+	stk->med_val = 51;
+	interv = select_halfn(stk, 'a', 75, 63);
 	//scanf("%d",&scan);
 	
-	stk->med_val = 38;
-	interv = select_bottom_halfn(stk, 'a', 50);
+	stk->med_val = 76;
+	interv = select_halfn(stk, 'a', 100, 88);
 	//scanf("%d",&scan);
-	
-	stk->med_val = 63;
-	interv = select_bottom_halfn(stk, 'a', 75);
-	//scanf("%d",&scan);
-	
-	//find_middle_in_interval(stk, 'b', interv - 1);
-	stk->med_val = 88;
-	interv = select_bottom_halfn(stk, 'a', 100);
-scanf("%d",&scan);
 	
 	//return 1;
+	//scanf("%d",&scan);
+	
+	ft_printf("sorting");
 
 	//find_middle_in_interval(stk, 'a', stk->sza);
 	//interv = select_first_half(stk, 'a');
@@ -335,7 +321,6 @@ scanf("%d",&scan);
 		max = ret_max(stk->b);
 		if (stk->szb > 2 &&  stk->b->nr != max)
 		{
-			
 			next_max = ret_next_max(stk->b, max);
 			while (stk->b->nr != max)
 			{

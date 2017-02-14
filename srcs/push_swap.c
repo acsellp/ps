@@ -11,25 +11,18 @@ int			main(int ac, char **av)
 	else
 		fill_a(av, 1, ac, stk);
 	
-
 	if (stk->flags.debug)
 		print_stacks("Init a and b", stk, MAX_INT, 0);
 
-	//ft_printf("\n stk->med_val %d \n array med %d\n",sel, stk->sorted[sel - 1]);
-	
-	//return 1;
-
 	sorting(stk);
-	
 	if (stk->flags.debug)
 		print_stacks("Done", stk, MAX_INT, 1);
-	
 	if (sorted(stk->a))
 		ft_printf("    STACK IS SORTED");
 	else
 		ft_printf("   NOT SORTED");
 	
-	
+
 	
 	del_stacks(&stk);
 	return (0);
