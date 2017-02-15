@@ -1,31 +1,18 @@
 #include "push_swap.h"
 
-void	check_cmds(char *cmd, t_stacks **stk, int pp)
+void	check_cmds(char *c, t_stacks **stk)
 {
-	if (!ft_strcmp(cmd, "pa") && cmd[2] == '\0')
-		pa(*stk, pp);
-	else if (!ft_strcmp(cmd, "pb") && cmd[2] == '\0')
-		pb(*stk, pp);
-	else if (!ft_strcmp(cmd, "sa") && cmd[2] == '\0')
-		msa(*stk, pp);
-	else if (!ft_strcmp(cmd, "sb") && cmd[2] == '\0')
-		msb(*stk, pp);
-	else if (!ft_strcmp(cmd, "ss") && cmd[2] == '\0')
-		mss(*stk, pp);
-	else if (!ft_strcmp(cmd, "ra") && cmd[2] == '\0')
-		ra(*stk, pp);
-	else if (!ft_strcmp(cmd, "rb") && cmd[2] == '\0')
-		rb(*stk, pp);
-	else if (!ft_strcmp(cmd, "rra") && cmd[2] == 'a' && cmd[3] == '\0')
-		rra(*stk, pp);
-	else if (!ft_strcmp(cmd, "rrb") && cmd[2] == 'b' && cmd[3] == '\0')
-		rrb(*stk, pp);
-	else if (!ft_strcmp(cmd, "rrr") && cmd[2] == 'r' && cmd[3] == '\0')
-		rrr(*stk, pp);
-	else if (!ft_strcmp(cmd, "rr") && cmd[2] == '\0')
-		rr(*stk, pp);
-	else
-		exit_on_err(stk);
+	(!ft_strcmp(c, "pa") && c[2] == '\0') ? pa(*stk, 0) : \
+	(!ft_strcmp(c, "pb") && c[2] == '\0') ? pb(*stk, 0) : \
+	(!ft_strcmp(c, "sa") && c[2] == '\0') ? msa(*stk, 0) : \
+	(!ft_strcmp(c, "sb") && c[2] == '\0') ? msb(*stk, 0) : \
+	(!ft_strcmp(c, "ss") && c[2] == '\0') ? mss(*stk, 0) : \
+	(!ft_strcmp(c, "ra") && c[2] == '\0') ? ra(*stk, 0) : \
+	(!ft_strcmp(c, "rb") && c[2] == '\0') ? rb(*stk, 0) : \
+	(!ft_strcmp(c, "rra") && c[2] == 'a' && c[3] == '\0') ? rra(*stk, 0) : \
+	(!ft_strcmp(c, "rrb") && c[2] == 'b' && c[3] == '\0') ? rrb(*stk, 0) : \
+	(!ft_strcmp(c, "rrr") && c[2] == 'r' && c[3] == '\0') ? rrr(*stk, 0) : \
+	(!ft_strcmp(c, "rr") && c[2] == '\0') ? rr(*stk, 0) : exit_on_err(stk);
 }
 
 int		main(int ac, char **av)
@@ -43,7 +30,7 @@ int		main(int ac, char **av)
 		fill_a(av, 1, ac, &stk);
 	while (get_next_line(0, &cmd) != 0)
 	{
-		check_cmds(cmd, &stk, 0);
+		check_cmds(cmd, &stk);
 		free(cmd);
 	}
 	(sorted(stk->a) == 1) ? ft_printf("OK\n") : ft_printf("KO\n");

@@ -31,8 +31,6 @@ void		print_stacks(char *oper, t_stacks *stk, int f, int cut)
 	int			max;
 	t_stack		*n;
 
-	cut = 1;
-	
 	i = (max = stk->sza > stk->szb ? stk->sza : stk->szb);
 	ft_printf("\n> %s:\n_______________________\n", oper);
 	while (i--)
