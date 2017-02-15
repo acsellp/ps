@@ -9,6 +9,7 @@
 #include <fcntl.h>
 #include "libft.h"
 #include "ft_printf.h"
+#include "get_next_line.h"
 
 #define MAX_INT	2147483647
 #define MIN_INT	-2147483648
@@ -46,15 +47,23 @@ typedef struct		s_stacks
 */
 int					pa(t_stacks *stk, int print);
 int					pb(t_stacks *stk, int print);
-void				sa(t_stacks *stk, int print);
-void				sb(t_stacks *stk, int print);
-void				ss(t_stacks *stk);
+int					sa(t_stacks *stk, int print);
+int					sb(t_stacks *stk, int print);
+int					ss(t_stacks *stk, int print);
 int					ra(t_stacks *stk, int print);
 int					rb(t_stacks *stk, int print);
-int					rr(t_stacks *stk);
-void				rra(t_stacks *stk, int print);
-void				rrb(t_stacks *stk, int print);
-void				rrr(t_stacks *stk);
+int					rr(t_stacks *stk, int print);
+int					rra(t_stacks *stk, int print);
+int					rrb(t_stacks *stk, int print);
+int					rrr(t_stacks *stk, int print);
+/*
+**	mod_swap.c
+*/
+int					mpa(t_stacks *stk, int print);
+int					mpb(t_stacks *stk, int print);
+int					msa(t_stacks *stk, int print);
+int					msb(t_stacks *stk, int print);
+int					mss(t_stacks *stk, int print);
 /*
 **	insert.c
 */
@@ -70,8 +79,8 @@ t_stack				*ret_stack_(t_stack *stack, int i);
 */
 long long			atol_base(char *arg, int base);
 int					check_doubles(t_stack *a, int key);
-void				check_flags(int i, int j, t_stacks *stk, char **av);
-void				check_args(char **av, int *sz, t_stacks *stk);
+void				check_flags(int i, int j, t_stacks **stk, char **av);
+void				check_args(char **av, int *sz, t_stacks **stk);
 int					check_range(long long key);
 /*
 **	algo_1.c
@@ -97,9 +106,9 @@ void				sorting(t_stacks *stk);
 */
 t_stacks			*init_stacks(void);
 void				del_stacks(t_stacks **stk);
-void				read_from_file(char *file_name, t_stacks *stk);
-void				fill_a(char **nbrs, int i, int sz, t_stacks *stk);
-void				exit_on_err(void);
+void				read_from_file(char *file_name, t_stacks **stk);
+void				fill_a(char **nbrs, int i, int sz, t_stacks **stk);
+void				exit_on_err(t_stacks **stk);
 int					sorted(t_stack *stack);
 /*
 **	radix.c

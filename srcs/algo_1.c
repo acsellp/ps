@@ -21,7 +21,7 @@ static void	filter_half_b(t_stacks *stk, int max, int next_max)
 {
 	size_t	pos;
 	
-	ss(stk);
+	ss(stk, 1);
 	sa(stk, 1);
 	next_max = ret_next_max(stk->b, max);
 	while (stk->b->nr != max)
@@ -32,7 +32,7 @@ static void	filter_half_b(t_stacks *stk, int max, int next_max)
 			pa(stk, 1);
 			next_max = ret_next_max(stk->b, next_max);
 		}
-		ss(stk);
+		ss(stk, 1);
 		sa(stk, 1);
 		(pos > stk->szb / 2) ? rrb(stk, 1) : rb(stk, 1);
 	}

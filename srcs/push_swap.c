@@ -28,31 +28,16 @@ void		sorting(t_stacks *stk)
 	push_back(stk, 0, 0);
 }
 
-int		sorted(t_stack *stack)
-{
-	t_stack	*n;
-	
-	n = stack;
-	while (n && n->next)
-	{
-		if (n->nr < (n->next)->nr)
-			n = n->next;
-		else
-			return (0);
-	}
-	return (1);
-}
-
 int			main(int ac, char **av)
 {
 	t_stacks	*stk;
 
 	stk = init_stacks();
-	check_args(av, &ac, stk);
+	check_args(av, &ac, &stk);
 	if (stk->flags.open_file)
-		read_from_file(av[1], stk);
+		read_from_file(av[1], &stk);
 	else
-		fill_a(av, 1, ac, stk);
+		fill_a(av, 1, ac, &stk);
 	stk->cnt = stk->sza;
 	radix(stk);
 	if (stk->flags.debug)

@@ -41,22 +41,19 @@ int			check_doubles(t_stack *a, int key)
 	return (0);
 }
 
-void		check_flags(int i, int j, t_stacks *stk, char **av)
+void		check_flags(int i, int j, t_stacks **stk, char **av)
 {
 	if (i == 1 && i++)
-		stk->flags.open_file = 1;
+		(*stk)->flags.open_file = 1;
 	else if (av[i][j] == 'v')
-		stk->flags.debug = 1;
+		(*stk)->flags.debug = 1;
 	else if (av[i][j] == 'c')
-		stk->flags.color = 1;
+		(*stk)->flags.color = 1;
 	else
-	{
-		del_stacks(&stk);
-		exit_on_err();
-	}
+		exit_on_err(stk);
 }
 
-void		check_args(char **av, int *ac, t_stacks *stk)
+void		check_args(char **av, int *ac, t_stacks **stk)
 {
 	int	i;
 	int j;
@@ -73,9 +70,9 @@ void		check_args(char **av, int *ac, t_stacks *stk)
 		}
 		i++;
 	}
-	if (stk->flags.debug)
+	if ((*stk)->flags.debug)
 		*ac -= 1;
-	if (stk->flags.color)
+	if ((*stk)->flags.color)
 		*ac -= 1;
 }
 

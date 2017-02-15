@@ -1,21 +1,21 @@
 #include "push_swap.h"
 
-void		fill_a(char **nbrs, int i, int sz, t_stacks *stk)
+void		fill_a(char **nbrs, int i, int sz, t_stacks **stk)
 {
 	long long	nr;
 	
 	while(i < sz)
 	{
 		nr = atol_base(nbrs[i], 10);
-		if (check_range(nr) || check_doubles(stk->a, nr))
-			exit_on_err();
-		insert(stk, 'a', nr);
-		stk->sza++;
+		if (check_range(nr) || check_doubles((*stk)->a, nr))
+			exit_on_err(stk);
+		insert(*stk, 'a', nr);
+		(*stk)->sza++;
 		i++;
 	}
 }
 
-void		read_from_file(char *file_name, t_stacks *stk)
+void		read_from_file(char *file_name, t_stacks **stk)
 {
 	int		fd;
 	char	c;
@@ -24,7 +24,7 @@ void		read_from_file(char *file_name, t_stacks *stk)
 	int		size;
 	
 	if ((fd = open(file_name, O_RDONLY)) == -1)
-		exit_on_err();
+		exit_on_err(stk);
 	size = 0;
 	while (read(fd, &c, 1) && ++size);
 	close(fd);
@@ -65,26 +65,22 @@ t_stacks	*init_stacks(void)
 void		del_stacks(t_stacks **stk)
 {
 	t_stack	*n;
-	
-	n = (*stk)->a;
-	while(n)
+	if (*stk)
 	{
-		delete(*stk, 'a', n->nr);
-		n = n->next;
+		n = (*stk)->a;
+		while(n)
+		{
+			delete(*stk, 'a', n->nr);
+			n = n->next;
+		}
+		n = (*stk)->b;
+		while(n)
+		{
+			delete(*stk, 'b', n->nr);
+			n = n->next;
+		}
+		if ((*stk)->sorted)
+			free((*stk)->sorted);
+		free(*stk);
 	}
-	n = (*stk)->b;
-	while(n)
-	{
-		delete(*stk, 'b', n->nr);
-		n = n->next;
-	}
-	if ((*stk)->sorted)
-		free((*stk)->sorted);
-	free(*stk);
-}
-
-void		exit_on_err(void)
-{
-	ft_printf("Error\n");
-	exit (1);
 }

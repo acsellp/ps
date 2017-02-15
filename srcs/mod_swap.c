@@ -1,6 +1,6 @@
 #include "push_swap.h"
 
-int		pa(t_stacks *stk, int print)
+int		mpa(t_stacks *stk, int print)
 {
 	t_stack	*new;
 	
@@ -19,7 +19,7 @@ int		pa(t_stacks *stk, int print)
 	return (1);
 }
 
-int		pb(t_stacks *stk, int print)
+int		mpb(t_stacks *stk, int print)
 {
 	t_stack	*new;
 	
@@ -38,56 +38,46 @@ int		pb(t_stacks *stk, int print)
 	return (1);
 }
 
-int		sa(t_stacks *stk, int print)
+int		msa(t_stacks *stk, int print)
 {
 	t_stack	*first;
 	int		tmp;
 
-	if (stk->sza >= 2 && stk->a->nr > stk->a->next->nr)
-	{
-		first = stk->a;
-		if (!first || first->next == NULL)
-			return (0);
-		tmp = (first->next)->nr;
-		(first->next)->nr = first->nr;
-		first->nr = tmp;
-		if (print == 1)
-			stk->flags.debug == 1 ? \
+	first = stk->a;
+	if (!first || first->next == NULL)
+		return (0);
+	tmp = (first->next)->nr;
+	(first->next)->nr = first->nr;
+	first->nr = tmp;
+	if (print == 1)
+		stk->flags.debug == 1 ? \
 			print_stacks("Exec sa", stk, tmp, 0) : ft_printf("sa\n");
-	}
 	return (1);
 }
 
-int		sb(t_stacks *stk, int print)
+int		msb(t_stacks *stk, int print)
 {
 	t_stack	*first;
 	int		tmp;
 	
-	if (stk->szb >= 2 && stk->b->nr < stk->b->next->nr)
-	{
-		first = stk->b;
-		if (!first || first->next == NULL)
-			return (0);
-		tmp = (first->next)->nr;
-		(first->next)->nr = first->nr;
-		first->nr = tmp;
-		if (print == 1)
-			stk->flags.debug == 1 ? \
+	first = stk->b;
+	if (!first || first->next == NULL)
+		return (0);
+	tmp = (first->next)->nr;
+	(first->next)->nr = first->nr;
+	first->nr = tmp;
+	if (print == 1)
+		stk->flags.debug == 1 ? \
 			print_stacks("Exec sb", stk, tmp, 0) : ft_printf("sb\n");
-	}
 	return (1);
 }
 
-int		ss(t_stacks *stk, int print)
+int		mss(t_stacks *stk, int print)
 {
-	if ((stk->sza >= 2 && stk->a->nr > stk->a->next->nr) && \
-		(stk->szb >= 2 && stk->b->nr < stk->b->next->nr))
-	{
-		sa(stk, 0);
-		sb(stk, 0);
-		if (print == 1)
+	sa(stk, 0);
+	sb(stk, 0);
+	if (print == 1)
 		stk->flags.debug == 1 ? \
 			print_stacks("Exec ss", stk, stk->a->nr, 0) : ft_printf("ss\n");
-	}
 	return (1);
 }

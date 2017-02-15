@@ -1,7 +1,0 @@
-Before any action described below is taken, and if nbyte is zero, the read() function may detect and return errors 
-as described below. In the absence of errors, or if error detection is not performed, the read() function shall 
-return zero and have no other results.
-
-On files that support seeking (for example, a regular file), the read() shall start at a position in the file 
-given by the file offset associated with fildes. The file offset shall be incremented by the number of bytes 
-actually read.

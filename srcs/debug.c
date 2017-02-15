@@ -31,6 +31,8 @@ void		print_stacks(char *oper, t_stacks *stk, int f, int cut)
 	int			max;
 	t_stack		*n;
 
+	cut = 1;
+	
 	i = (max = stk->sza > stk->szb ? stk->sza : stk->szb);
 	ft_printf("\n> %s:\n_______________________\n", oper);
 	while (i--)
@@ -50,4 +52,26 @@ void		print_stacks(char *oper, t_stacks *stk, int f, int cut)
 			ft_printf("%11 |\n");
 	}
 	ft_printf("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\n%7 a %10 b\n\n\n");
+}
+
+int		sorted(t_stack *stack)
+{
+	t_stack	*n;
+	
+	n = stack;
+	while (n && n->next)
+	{
+		if (n->nr < (n->next)->nr)
+			n = n->next;
+		else
+			return (0);
+	}
+	return (1);
+}
+
+void		exit_on_err(t_stacks **stk)
+{
+	del_stacks(stk);
+	ft_printf("Error\n");
+	exit (1);
 }

@@ -68,7 +68,7 @@ int			select_half(t_stacks *stk)
 			(stk->b && stk->b->nr <= stk->low_mid) ? rb(stk, 1) : 0;
 		}
 		else
-			(stk->b && stk->b->nr <= stk->low_mid) ? rr(stk) : ra(stk, 1);
+			(stk->b && stk->b->nr <= stk->low_mid) ? rr(stk, 1) : ra(stk, 1);
 		count--;
 	}
 	return (ps);

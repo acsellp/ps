@@ -22,7 +22,7 @@ void		push_to_a(t_stacks *stk, int pbs)
 	while (pbs-- > 0)
 	{
 		pa(stk, 1);
-		ss(stk);	 
+		ss(stk, 1);	 
 		sa(stk, 1);
 		sb(stk, 1);
 	}
@@ -32,7 +32,7 @@ static void	filter_half_a(t_stacks *stk, int next_min, int min, int *pbs)
 {
 	size_t	pos;
 	
-	ss(stk);
+	ss(stk, 1);
 	sb(stk, 1);
 	next_min = ret_next_min(stk->a, min);
 	while (stk->a->nr != min)
@@ -44,7 +44,7 @@ static void	filter_half_a(t_stacks *stk, int next_min, int min, int *pbs)
 			*pbs += 1;
 			next_min = ret_next_min(stk->a, next_min);
 		}
-		ss(stk);
+		ss(stk, 1);
 		sb(stk, 1);
 		(pos > stk->sza / 2) ? rra(stk, 1) : ra(stk, 1);
 	}

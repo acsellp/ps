@@ -46,10 +46,11 @@ int		rb(t_stacks *stk, int print)
 	return (1);
 }
 
-int		rr(t_stacks *stk)
+int		rr(t_stacks *stk, int print)
 {
 	ra(stk, 0);
 	rb(stk, 0);
+	if (print == 1)
 	stk->flags.debug == 1 ? \
 		print_stacks("Exec rr", stk, MAX_INT, 0) : ft_printf("rr\n");
 	return (1);
